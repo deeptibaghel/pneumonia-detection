@@ -1,0 +1,56 @@
+deeptibaghel@Deeptis-MacBook-Pro:~/git/gl/projects/12.capstone/final/api$ docker build . -t detector
+[+] Building 6.6s (18/18) FINISHED                                                                                                                            
+ => [internal] load build definition from Dockerfile                                                                                                     0.0s
+ => => transferring dockerfile: 37B                                                                                                                      0.0s
+ => [internal] load .dockerignore                                                                                                                        0.0s
+ => => transferring context: 2B                                                                                                                          0.0s
+ => [internal] load metadata for docker.io/library/python:3.8-slim-buster                                                                                2.6s
+ => [internal] load build context                                                                                                                        2.3s
+ => => transferring context: 165.93MB                                                                                                                    2.3s
+ => [ 1/13] FROM docker.io/library/python:3.8-slim-buster@sha256:9e3036f6b032794efb662f3c579c4c35d0b678bc793590e3e2e217cb5bf1e11b                        0.0s
+ => CACHED [ 2/13] RUN apt-get update -y                                                                                                                 0.0s
+ => CACHED [ 3/13] RUN apt-get -y install git build-essential libglib2.0-0 libsm6 libxext6 libxrender-dev                                                0.0s
+ => CACHED [ 4/13] RUN apt-get -y install ffmpeg libsm6 libxext6                                                                                         0.0s
+ => CACHED [ 5/13] RUN pip install torch==1.9.0+cpu torchvision==0.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html                        0.0s
+ => CACHED [ 6/13] RUN pip install cython                                                                                                                0.0s
+ => CACHED [ 7/13] RUN pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'                                            0.0s
+ => CACHED [ 8/13] RUN python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch1.9/index.html                      0.0s
+ => CACHED [ 9/13] RUN pip install flask flask-cors requests opencv-python                                                                               0.0s
+ => CACHED [10/13] WORKDIR /app                                                                                                                          0.0s
+ => [11/13] COPY web_api.py web_api.py                                                                                                                   0.2s
+ => [12/13] COPY model_final.pth model_final.pth                                                                                                         0.6s
+ => [13/13] COPY test_img.jpg test_img.jpg                                                                                                               0.0s
+ => exporting to image                                                                                                                                   0.7s
+ => => exporting layers                                                                                                                                  0.7s
+ => => writing image sha256:92f5e8cf67adf1b2824cba7ebea04ca06723a99eedee3098b900037d25dcab9f                                                             0.0s
+ => => naming to docker.io/library/detector                                                                                                              0.0s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+deeptibaghel@Deeptis-MacBook-Pro:~/git/gl/projects/12.capstone/final/api$ docker run -p 8181:5000 -it detector
+Predictor has been initialized.
+ * Serving Flask app 'web_api' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.2:5000/ (Press CTRL+C to quit)
+/app/web_api.py:38: DeprecationWarning: The binary mode of fromstring is deprecated, as it behaves surprisingly on unicode inputs. Use frombuffer instead
+  image = cv2.imdecode(np.fromstring(response, np.uint8), cv2.IMREAD_COLOR)
+/usr/local/lib/python3.8/site-packages/torch/_tensor.py:575: UserWarning: floor_divide is deprecated, and will be removed in a future version of pytorch. It currently rounds toward 0 (like the 'trunc' function NOT 'floor'). This results in incorrect rounding for negative values.
+To keep the current behavior, use torch.div(a, b, rounding_mode='trunc'), or for actual floor division, use torch.div(a, b, rounding_mode='floor'). (Triggered internally at  /pytorch/aten/src/ATen/native/BinaryOps.cpp:467.)
+  return torch.floor_divide(self, other)
+/usr/local/lib/python3.8/site-packages/torch/nn/functional.py:718: UserWarning: Named tensors and all their associated APIs are an experimental feature and subject to change. Please do not use them for anything important until they are released as stable. (Triggered internally at  /pytorch/c10/core/TensorImpl.h:1156.)
+  return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+172.17.0.1 - - [07/Nov/2021 12:41:07] "POST /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:41:18] "OPTIONS /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:41:20] "POST /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:43:53] "OPTIONS /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:43:56] "POST /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:44:03] "OPTIONS /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:44:05] "POST /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:45:24] "OPTIONS /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:45:26] "POST /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:45:32] "OPTIONS /api/predict HTTP/1.1" 200 -
+172.17.0.1 - - [07/Nov/2021 12:45:35] "POST /api/predict HTTP/1.1" 200 -
